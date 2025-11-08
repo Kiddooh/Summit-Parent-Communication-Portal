@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summit Connect - Parent Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #f5f5f5;
+            --text: #333;
+            --text-light: #666;
+            --border: #ddd;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --white: #fff;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        
+        .logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .logo h1 {
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .nav-links {
+            flex: 1;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .user-info {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h2 {
+            color: var(--primary);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--secondary);
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        /* Card Styles */
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Student Info Styles */
+        .student-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .student-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 28px;
+            margin-right: 15px;
+        }
+        
+        .student-details h3 {
+            margin-bottom: 5px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background-color: var(--secondary);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .attendance-high {
+            color: var(--success);
+        }
+        
+        .fee-balance {
+            color: var(--warning);
+        }
+        
+        /* Notifications Styles */
+        .notification-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .notification-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        /* Messaging Styles */
+        .message-container {
+            height: 350px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: var(--secondary);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            position: relative;
+        }
+        
+        .message.received {
+            background-color: var(--white);
+            border-top-left-radius: 0;
+            align-self: flex-start;
+        }
+        
+        .message.sent {
+            background-color: var(--primary);
+            color: white;
+            border-top-right-radius: 0;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .message-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .message-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            outline: none;
+        }
+        
+        .message-input button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary);
+        }
+        
+        .login-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            width: 400px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        /* Calendar Styles */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .calendar-header {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .calendar-day {
+            background-color: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 10px;
+            min-height: 100px;
+            position: relative;
+        }
+        
+        .calendar-day.other-month {
+            color: var(--text-light);
+            background-color: var(--secondary);
+        }
+        
+        .calendar-day.today {
+            background-color: #e3f2fd;
+            border-color: var(--primary);
+        }
+        
+        .calendar-event {
+            background-color: var(--primary);
+            color: white;
+            font-size: 12px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+        
+        /* Academics Styles */
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .grades-table th, .grades-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .grades-table th {
+            background-color: var(--secondary);
+            font-weight: 600;
+        }
+        
+        .grades-table tr:hover {
+            background-color: var(--secondary);
+        }
+        
+        .grade-A { color: var(--success); font-weight: bold; }
+        .grade-B { color: #2196f3; font-weight: bold; }
+        .grade-C { color: var(--warning); font-weight: bold; }
+        .grade-D { color: var(--danger); font-weight: bold; }
+        
+        /* Payments Styles */
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .payment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .payment-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-paid {
+            background-color: #e8f5e9;
+            color: var(--success);
+        }
+        
+        .status-pending {
+            background-color: #fff3e0;
+            color: var(--warning);
+        }
+        
+        .status-overdue {
+            background-color: #ffebee;
+            color: var(--danger);
+        }
+        
+        /* Reports Styles */
+        .report-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .report-date {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        /* Settings Styles */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        
+        .settings-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .settings-option:last-child {
+            border-bottom: none;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Page Content */
+        .page-content {
+            display: none;
+        }
+        
+        .page-content.active {
+            display: block;
+        }
+        
+        /* Sign Up Page Styles */
+        .signup-container {
+            display: none;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary);
+        }
+        
+        .signup-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .signup-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .signup-header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .calendar-day {
+                min-height: 70px;
+            }
+        }
+        
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                height: 100vh;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Summit Connect</h1>
+                <p>Parent Communication Portal</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email or phone</label>
+                    <input type="text" id="email" class="form-control" placeholder="Enter your email or phone">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password">
+                </div>
+                <div class="forgot-password">
+                    <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 15px;">Login</button>
+            </form>
+            <div class="login-footer">
+                <p>Don't have an account? <a href="#" id="showSignupLink">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Page -->
+    <div id="signupPage" class="signup-container">
+        <div class="signup-card">
+            <div class="signup-header">
+                <h1>Create Account</h1>
+                <p>Join Summit Connect today</p>
+            </div>
+            <form id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="form-control" placeholder="Enter your first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="form-control" placeholder="Enter your last name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentName" class="form-control" placeholder="Enter student's name" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentId">Student ID</label>
+                    <input type="text" id="studentId" class="form-control" placeholder="Enter student ID">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 15px;">Create Account</button>
+            </form>
+            <div class="login-footer">
+                <p>Already have an account? <a href="#" id="showLoginLink">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="container" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <h1>Summit Connect</h1>
+            </div>
+            <div class="nav-links">
+                <a class="nav-link active" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a class="nav-link" data-page="academics">
+                    <i class="fas fa-book"></i> Academics
+                </a>
+                <a class="nav-link" data-page="calendar">
+                    <i class="fas fa-calendar-alt"></i> Calendar
+                </a>
+                <a class="nav-link" data-page="payments">
+                    <i class="fas fa-credit-card"></i> Payments
+                </a>
+                <a class="nav-link" data-page="reports">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+                <a class="nav-link" data-page="messaging">
+                    <i class="fas fa-comments"></i> Messaging
+                </a>
+                <a class="nav-link" data-page="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">TB</div>
+                <p><strong>Tyler Brown</strong></p>
+                <p>Parent</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="header-actions">
+                    <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page-content active">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Student Information</h3>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-avatar">TB</div>
+                            <div class="student-details">
+                                <h3>Tyler Brown</h3>
+                                <p>Grade 5, Room 12</p>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value attendance-high">95%</div>
+                                <div>Attendance</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">A-</div>
+                                <div>Latest Grade</div>
+                                <div>Math</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value fee-balance">$200</div>
+                                <div>Fee Balance</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">3</div>
+                                <div>Upcoming Events</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Notifications</h3>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="notification-title">Parent-Teacher Conference</div>
+                                <div class="notification-desc">Upcoming parent-teacher conference on Friday</div>
+                                <div class="notification-date">2 days ago</div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-title">Field Trip Permission</div>
+                                <div class="notification-desc">Please sign the permission slip for the museum field trip</div>
+                                <div class="notification-date">5 days ago</div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-title">Report Card Available</div>
+                                <div class="notification-desc">Q2 report card is now available for viewing</div>
+                                <div class="notification-date">1 week ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <h3 class="card-title">Upcoming Events</h3>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="notification-title">Math Test</div>
+                                <div class="notification-desc">Chapter 5 Mathematics assessment</div>
+                                <div class="notification-date">Tomorrow, 10:00 AM</div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-title">Science Fair</div>
+                                <div class="notification-desc">Annual school science fair exhibition</div>
+                                <div class="notification-date">Next Monday, 9:00 AM - 2:00 PM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academics Page -->
+            <div id="academics" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Academic Performance</h3>
+                    </div>
+                    <table class="grades-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Current Grade</th>
+                                <th>Last Assessment</th>
+                                <th>Teacher</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mathematics</td>
+                                <td class="grade-A">A-</td>
+                                <td>Chapter 4 Test: 92%</td>
+                                <td>Ms. Johnson</td>
+                            </tr>
+                            <tr>
+                                <td>English Language Arts</td>
+                                <td class="grade-B">B+</td>
+                                <td>Essay: 88%</td>
+                                <td>Mr. Davis</td>
+                            </tr>
+                            <tr>
+                                <td>Science</td>
+                                <td class="grade-A">A</td>
+                                <td>Lab Report: 95%</td>
+                                <td>Mrs. Garcia</td>
+                            </tr>
+                            <tr>
+                                <td>Social Studies</td>
+                                <td class="grade-B">B</td>
+                                <td>Project: 85%</td>
+                                <td>Mr. Wilson</td>
+                            </tr>
+                            <tr>
+                                <td>Art</td>
+                                <td class="grade-A">A</td>
+                                <td>Portfolio: 96%</td>
+                                <td>Ms. Lee</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Assignment Status</h3>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item">
+                            <div class="notification-title">Math Homework - Chapter 5</div>
+                            <div class="notification-desc">Due: Tomorrow</div>
+                            <div class="notification-date">Status: Not Submitted</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-title">Science Project - Solar System</div>
+                            <div class="notification-desc">Due: Next Friday</div>
+                            <div class="notification-date">Status: In Progress</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-title">Book Report - Charlotte's Web</div>
+                            <div class="notification-desc">Submitted: Last Monday</div>
+                            <div class="notification-date">Status: Graded - 90%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Page -->
+            <div id="calendar" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">School Calendar - October 2023</h3>
+                        <div class="header-actions">
+                            <button class="btn btn-outline"><i class="fas fa-chevron-left"></i></button>
+                            <button class="btn btn-outline"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <div>Sun</div>
+                            <div>Mon</div>
+                            <div>Tue</div>
+                            <div>Wed</div>
+                            <div>Thu</div>
+                            <div>Fri</div>
+                            <div>Sat</div>
+                        </div>
+                        <div class="calendar-day other-month">25</div>
+                        <div class="calendar-day other-month">26</div>
+                        <div class="calendar-day other-month">27</div>
+                        <div class="calendar-day other-month">28</div>
+                        <div class="calendar-day other-month">29</div>
+                        <div class="calendar-day other-month">30</div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day">3</div>
+                        <div class="calendar-day">4</div>
+                        <div class="calendar-day">5</div>
+                        <div class="calendar-day">6</div>
+                        <div class="calendar-day">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day">14</div>
+                        <div class="calendar-day today">15
+                            <div class="calendar-event">Parent-Teacher Conference</div>
+                        </div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day">18</div>
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day">20</div>
+                        <div class="calendar-day">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24
+                            <div class="calendar-event">Math Test</div>
+                        </div>
+                        <div class="calendar-day">25</div>
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                        <div class="calendar-day">31</div>
+                        <div class="calendar-day other-month">1</div>
+                        <div class="calendar-day other-month">2</div>
+                        <div class="calendar-day other-month">3</div>
+                        <div class="calendar-day other-month">4</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Upcoming Events</h3>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item">
+                            <div class="notification-title">Parent-Teacher Conference</div>
+                            <div class="notification-desc">Friday, October 15 • 2:00 PM - 4:00 PM</div>
+                            <div class="notification-date">Location: School Conference Room</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-title">Math Test - Chapter 5</div>
+                            <div class="notification-desc">Monday, October 24 • During Math Class</div>
+                            <div class="notification-date">Topics: Fractions and Decimals</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-title">Science Fair</div>
+                            <div class="notification-desc">Wednesday, November 2 • All Day</div>
+                            <div class="notification-date">Location: School Gymnasium</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Page -->
+            <div id="payments" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fee Summary</h3>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">$200</div>
+                            <div>Outstanding Balance</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">$1,200</div>
+                            <div>Paid This Year</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2</div>
+                            <div>Pending Payments</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">0</div>
+                            <div>Overdue Payments</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Payment History</h3>
+                    </div>
+                    <div class="payment-list">
+                        <div class="payment-item">
+                            <div>
+                                <div class="notification-title">Tuition Fee - October 2023</div>
+                                <div class="notification-date">Due: Oct 5, 2023 • Amount: $400</div>
+                            </div>
+                            <div class="payment-status status-pending">Pending</div>
+                        </div>
+                        <div class="payment-item">
+                            <div>
+                                <div class="notification-title">Activity Fee - Field Trip</div>
+                                <div class="notification-date">Due: Sep 28, 2023 • Amount: $50</div>
+                            </div>
+                            <div class="payment-status status-overdue">Overdue</div>
+                        </div>
+                        <div class="payment-item">
+                            <div>
+                                <div class="notification-title">Tuition Fee - September 2023</div>
+                                <div class="notification-date">Paid: Sep 4, 2023 • Amount: $400</div>
+                            </div>
+                            <div class="payment-status status-paid">Paid</div>
+                        </div>
+                        <div class="payment-item">
+                            <div>
+                                <div class="notification-title">Technology Fee</div>
+                                <div class="notification-date">Paid: Aug 15, 2023 • Amount: $150</div>
+                            </div>
+                            <div class="payment-status status-paid">Paid</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reports" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Progress Reports</h3>
+                    </div>
+                    <div class="report-list">
+                        <div class="report-card">
+                            <div class="notification-title">Quarter 1 Progress Report</div>
+                            <div class="report-date">Issued: October 10, 2023</div>
+                            <div class="notification-desc">Overall GPA: 3.6 • Comments: Tyler is showing excellent progress in Mathematics and Science. He should focus on improving his writing skills in English.</div>
+                            <button class="btn btn-outline" style="margin-top: 10px;">Download PDF</button>
+                        </div>
+                        <div class="report-card">
+                            <div class="notification-title">Mid-Term Assessment</div>
+                            <div class="report-date">Issued: September 15, 2023</div>
+                            <div class="notification-desc">Overall GPA: 3.4 • Comments: Tyler is participating well in class discussions. He needs to work on completing assignments on time.</div>
+                            <button class="btn btn-outline" style="margin-top: 10px;">Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Attendance Report</h3>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value attendance-high">95%</div>
+                            <div>Overall Attendance</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2</div>
+                            <div>Days Absent</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">3</div>
+                            <div>Times Tardy</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">0</div>
+                            <div>Early Departures</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messaging Page -->
+            <div id="messaging" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Messaging</h3>
+                    </div>
+                    <div class="message-container" id="messageContainer">
+                        <div class="message received">
+                            <div class="message-text">Hello, Mrs. Adams! How is Tyler doing in class?</div>
+                            <div class="message-time">10:15 AM</div>
+                        </div>
+                        <div class="message sent">
+                            <div class="message-text">Hi! Tyler has been doing great in class. He scored an A on his last math test.</div>
+                            <div class="message-time">10:20 AM</div>
+                        </div>
+                        <div class="message received">
+                            <div class="message-text">That's great to hear! Thank you for the update.</div>
+                            <div class="message-time">10:22 AM</div>
+                        </div>
+                    </div>
+                    <div class="message-input">
+                        <input type="text" id="messageInput" placeholder="Type your message...">
+                        <button id="sendMessageBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Contacts</h3>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item">
+                            <div class="notification-title">Ms. Johnson - Mathematics</div>
+                            <div class="notification-desc">Last message: Yesterday</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-title">Mr. Davis - English</div>
+                            <div class="notification-desc">Last message: 3 days ago</div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-title">Mrs. Garcia - Science</div>
+                            <div class="notification-desc">Last message: 1 week ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Account Settings</h3>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Profile Information</h3>
+                        <div class="form-group">
+                            <label for="profileName">Full Name</label>
+                            <input type="text" id="profileName" class="form-control" value="Tyler Brown">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail">Email Address</label>
+                            <input type="email" id="profileEmail" class="form-control" value="tyler.brown@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePhone">Phone Number</label>
+                            <input type="tel" id="profilePhone" class="form-control" value="(555) 123-4567">
+                        </div>
+                        <button class="btn btn-primary">Update Profile</button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Notification Preferences</h3>
+                        <div class="settings-option">
+                            <span>Email Notifications</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="settings-option">
+                            <span>SMS Notifications</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="settings-option">
+                            <span>Push Notifications</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Security</h3>
+                        <button class="btn btn-outline" style="margin-bottom: 15px;">Change Password</button>
+                        <button class="btn btn-outline">Two-Factor Authentication</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const signupPage = document.getElementById('signupPage');
+        const app = document.getElementById('app');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const showSignupLink = document.getElementById('showSignupLink');
+        const showLoginLink = document.getElementById('showLoginLink');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const messageContainer = document.getElementById('messageContainer');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pageContents = document.querySelectorAll('.page-content');
+        const pageTitle = document.getElementById('pageTitle');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        // Page titles mapping
+        const pageTitles = {
+            'dashboard': 'Dashboard',
+            'academics': 'Academics',
+            'calendar': 'Calendar',
+            'payments': 'Payments',
+            'reports': 'Reports',
+            'messaging': 'Messaging',
+            'settings': 'Settings'
+        };
+
+        // Login functionality
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // In a real app, you would validate credentials with a server
+            // For this demo, we'll just show the app
+            loginPage.style.display = 'none';
+            app.style.display = 'flex';
+        });
+
+        // Show signup page
+        showSignupLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginPage.style.display = 'none';
+            signupPage.style.display = 'flex';
+        });
+
+        // Show login page
+        showLoginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            signupPage.style.display = 'none';
+            loginPage.style.display = 'flex';
+        });
+
+        // Signup functionality
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // In a real app, you would send the data to a server
+            // For this demo, we'll just show the app
+            signupPage.style.display = 'none';
+            app.style.display = 'flex';
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function() {
+            app.style.display = 'none';
+            loginPage.style.display = 'flex';
+            // Clear the forms
+            loginForm.reset();
+            signupForm.reset();
+        });
+
+        // Navigation functionality
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const targetPage = this.getAttribute('data-page');
+                
+                // Update active nav link
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show target page
+                pageContents.forEach(page => page.classList.remove('active'));
+                document.getElementById(targetPage).classList.add('active');
+                
+                // Update page title
+                pageTitle.textContent = pageTitles[targetPage];
+                
+                // Close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+
+        // Mobile menu functionality
+        mobileMenuBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+        });
+
+        // Messaging functionality
+        sendMessageBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (messageText === '') return;
+            
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'sent');
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageElement.innerHTML = `
+                <div class="message-text">${messageText}</div>
+                <div class="message-time">${timeString}</div>
+            `;
+            
+            messageContainer.appendChild(messageElement);
+            messageInput.value = '';
+            
+            // Scroll to bottom of messages
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+            
+            // Simulate a reply after a short delay
+            setTimeout(simulateReply, 1500);
+        }
+
+        function simulateReply() {
+            const replies = [
+                "Thanks for your message. I'll get back to you soon.",
+                "I've noted your question and will follow up.",
+                "Great question! Let me check on that and get back to you.",
+                "I appreciate you reaching out. Let's discuss this further."
+            ];
+            
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+            
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'received');
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageElement.innerHTML = `
+                <div class="message-text">${randomReply}</div>
+                <div class="message-time">${timeString}</div>
+            `;
+            
+            messageContainer.appendChild(messageElement);
+            
+            // Scroll to bottom of messages
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+
+        // Close mobile menu when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                e.target !== mobileMenuBtn && 
+                !mobileMenuBtn.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
